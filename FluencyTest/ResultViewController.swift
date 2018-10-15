@@ -1,11 +1,3 @@
-//
-//  ResultViewController.swift
-//  FluencyTest
-//
-//  Created by Aline Ebone on 18/09/18.
-//  Copyright © 2018 Aline Ebone. All rights reserved.
-//
-
 import UIKit
 
 class ResultViewController: UIViewController {
@@ -13,33 +5,56 @@ class ResultViewController: UIViewController {
     var levenshtein: Double!
     var damerauLevenshtein: Double!
     var jaroWinkler: Double!
+    var average: Double!
     
     @IBOutlet weak var levenshteinLabel: UILabel!
     @IBOutlet weak var damerauLevenshteinLabel: UILabel!
     @IBOutlet weak var jaroWinklerLabel: UILabel!
+    @IBOutlet weak var averageLabel: UILabel!
+    @IBOutlet weak var gradeLabel: UILabel!
+    
+    var grade: String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        levenshteinLabel.text = "Levenshtein: \(String(levenshtein))"
-        damerauLevenshteinLabel.text = "Damerau Levenshtein: \(String(damerauLevenshtein))"
-        jaroWinklerLabel.text = "Jaro Winkler: \(String(jaroWinkler))"
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        calculateAverage()
+        calculateGrade()
+        
+        gradeLabel.text = "Your score is: \(grade!)"
+        levenshteinLabel.text = "Levenshtein: \(String(format: "%.2f", levenshtein))"
+        damerauLevenshteinLabel.text = "Damerau Levenshtein: \(String(format: "%.2f", damerauLevenshtein))"
+        jaroWinklerLabel.text = "Jaro Winkler: \(String(format: "%.2f", jaroWinkler))"
+        averageLabel.text = "Average: \(String(format: "%.2f", average))"
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func calculateAverage() {
+        self.average = (self.damerauLevenshtein + self.jaroWinkler + self.levenshtein) / 3
     }
-    */
-
+    
+    func calculateGrade() {
+        if average >= 90 && average <= 100 {
+            self.grade = "A+"
+        } else if average >= 85 && average <= 89 {
+            self.grade = "A"
+        } else if average >= 80 && average <= 84 {
+            self.grade = "A-"
+        } else if average >= 77 && average <= 79 {
+            self.grade = "B+"
+        } else if average >= 73 && average <= 76 {
+            self.grade = "B"
+        } else if average >= 70 && average <= 72 {
+            self.grade = "B-"
+        } else if average >= 65 && average <= 69 {
+            self.grade = "C+"
+        } else if average >= 60 && average <= 64 {
+            self.grade = "C"
+        } else if average >= 55 && average <= 59 {
+            self.grade = "C-"
+        } else if average >= 50 && average <= 54 {
+            self.grade = "D"
+        } else if average >= 0 && average <= 49 {
+            self.grade = "F"
+        }
+    }
 }

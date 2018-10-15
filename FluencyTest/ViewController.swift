@@ -15,6 +15,8 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     
     var biggestString: Double = 0.0
     
+    var texts: [String]!
+    
     var levenshtein: Double = 0.0
     var damerauLevenshtein: Double = 0.0
     var jaroWinkler: Double = 0.0
@@ -28,9 +30,16 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-      
+        texts = [
+            "Small talk is light conversation. It can be about the weather, food, anything that isn’t too serious. If you’re in the same room as someone, in an elevator together or just standing near each other and you aren’t working, making small talk can open the conversation and form friendships and connections. It also saves you from uncomfortable silences!",
+            "A paper published in the British Medical Journal in 2015 found that alcohol consumption was more likely to rise to risky levels among adults who work more than 48 hours a week compared with those who work average hours. That paper involved reviewing and analyzing 63 previously published studies on the association between long working hours and alcohol use.",
+            "The best way to overcome a natural tendency to procrastinate is to create a hard deadline for yourself and then put it on the calendar. Having a scheduled deadline that you commit to will make it easier to get tasks completed. Treat the deadline the same as if your boss created it, and then honor it the same way you would if your boss were waiting for you to complete the task.",
+            "Just 80 miles east of Silicon Valley, one of the wealthiest regions in the country, is Stockton, California — once known as America's foreclosure capital. Soon, the former bankrupt city will become the first in the country to participate in a test of Universal Basic Income, also known as UBI. Stockton will give 100 residents $500 a month for 18 months, no strings attached.",
+            "Fall is here, and hotels are gearing up for the holidays. Business is about to pick up again after a shoulder season in which families stayed put for the start of the school year. But Thanksgiving and Christmas are just around the corner, and hotels are unveiling their latest renovations to attract the holiday crowds."
+        ]
         
-        textToRead = "Testing this app"
+        textToRead = texts[Int.random(in: 0..<texts.count)]
+        
         transcribedText = "Waiting..."
         
         textToReadTextView.text = textToRead
@@ -143,28 +152,16 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         let damerauLevenshteinDistance: Double = Double(textToReadParameterized.distanceDamerauLevenshtein(between: transcribedTextParameterized))
         let jaroWinklerDistance: Double = textToReadParameterized.distanceJaroWinkler(between: transcribedTextParameterized)
         
-        
-        print("target: \(textToReadParameterized)")
-        print("to compare: \(transcribedTextParameterized)")
-        print("Numero de caracteres da maior string: \(biggestString)\n")
-        
-        print("Levenshtein: \(levenshteinDistance)")
-        print("DamerauLevenshtein: \(damerauLevenshteinDistance)")
-        print("JaroWinkler: \(jaroWinklerDistance)\n")
-        
         levenshtein = (1 - (levenshteinDistance/biggestString)) * 100
         damerauLevenshtein = (1 - damerauLevenshteinDistance/biggestString) * 100
         jaroWinkler = textToReadParameterized.distanceJaroWinkler(between: transcribedTextParameterized) * 100
-        
-        print("Levenshtein: \(levenshtein)")
-        print("DamerauLevenshtein: \(damerauLevenshtein)")
-        print("JaroWinkler: \(jaroWinkler)")
-        
     }
     
     func removePontuaction() {
-        textToReadParameterized = textToRead.lowercased().replacingOccurrences(of: ",", with: "").replacingOccurrences(of: "'", with: "").replacingOccurrences(of: "...", with: "")
-        transcribedTextParameterized = transcribedText.lowercased().replacingOccurrences(of: ",", with: "").replacingOccurrences(of: "...", with: "")
+        textToReadParameterized = textToRead.lowercased()
+            .replacingOccurrences(of: ",", with: "").replacingOccurrences(of: "'", with: "").replacingOccurrences(of: "...", with: "").replacingOccurrences(of: "!", with: "").replacingOccurrences(of: "?", with: "").replacingOccurrences(of: ";", with: "").replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "—", with: "")
+        transcribedTextParameterized = transcribedText.lowercased()
+            .replacingOccurrences(of: ",", with: "").replacingOccurrences(of: "'", with: "").replacingOccurrences(of: "...", with: "").replacingOccurrences(of: "!", with: "").replacingOccurrences(of: "?", with: "").replacingOccurrences(of: ";", with: "").replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "—", with: "")
     }
     
     func returnTheBiggestString() {
@@ -178,4 +175,11 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
             resultViewController.jaroWinkler = jaroWinkler
         }
     }
+    
+    @IBAction func refreshText(_ sender: UIBarButtonItem) {
+        textToRead = texts[Int.random(in: 0..<texts.count)]
+        textToReadTextView.text = textToRead
+    }
+    
+    
 }
