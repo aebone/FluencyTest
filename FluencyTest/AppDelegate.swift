@@ -16,10 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        var navigationBarAppearace = UINavigationBar.appearance()
-        navigationBarAppearace.tintColor = #colorLiteral(red: 0, green: 0.4117647059, blue: 0.8509803922, alpha: 1)
-        navigationBarAppearace.barTintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        
+      
 //        if let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as? UIView {
 //            statusBar.backgroundColor = UIColor(red: 15, green: 87, blue: 56, alpha: 1);
 //        }

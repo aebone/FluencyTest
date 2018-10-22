@@ -7,7 +7,10 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     @IBOutlet weak var textToReadTextView: UITextView!
     @IBOutlet weak var transcribedTextView: UITextView!
     @IBOutlet weak var startTalkingButton: UIButton!
+    @IBOutlet weak var locleBtn: UIBarButtonItem!
+    @IBOutlet weak var indicator: UIActivityIndicatorView!
     
+
     var textToRead: String = ""
     var transcribedText: String = ""
     var textToReadParameterized: String = ""
@@ -20,15 +23,24 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     var levenshtein: Double = 0.0
     var damerauLevenshtein: Double = 0.0
     var jaroWinkler: Double = 0.0
+
+    var locale: String = "en-US"
     
+    var speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
     let audioEngine = AVAudioEngine()
-    let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
     
     var request: SFSpeechAudioBufferRecognitionRequest?
     var task: SFSpeechRecognitionTask?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.indicator.isHidden = true
+        
+        speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: self.locale))!
+        
+        print(speechRecognizer.locale)
+        self.locleBtn.title = self.locale
         
         texts = [
             "Small talk is light conversation. It can be about the weather, food, anything that isn’t too serious. If you’re in the same room as someone, in an elevator together or just standing near each other and you aren’t working, making small talk can open the conversation and form friendships and connections. It also saves you from uncomfortable silences!",
@@ -71,6 +83,8 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
             
             request?.endAudio()
             audioEngine.stop()
+            
+            
         } else {
             startTalkingButton.setTitle("Stop Recording", for: .normal)
             promptLabel.text = "Go ahead. I'm listening..."
@@ -142,22 +156,40 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         return Double(s2.count)
     }
     
-    @IBAction func checkButtonClicked(_ sender: Any) {
-        
-        removePontuaction()
-        returnTheBiggestString()
+     @IBAction func checkButtonClicked(_ sender: Any) {
 
-        // distances
+        self.indicator.isHidden = false
+        self.indicator.startAnimating()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
+            self.removePontuaction()
+            self.returnTheBiggestString()
+            self.calculateDistances()
+            
+            self.indicator.stopAnimating()
+            self.indicator.isHidden = true
+            
+            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let resultViewController = storyBoard.instantiateViewController(withIdentifier: "ResultViewController") as! ResultViewController
+            resultViewController.levenshtein = self.levenshtein
+            resultViewController.damerauLevenshtein = self.damerauLevenshtein
+            resultViewController.jaroWinkler = self.jaroWinkler
+            resultViewController.locale = self.locale
+            self.navigationController?.pushViewController(resultViewController, animated: true)
+        }
+    }
+    
+    func calculateDistances() {
         let levenshteinDistance: Double = Double(textToReadParameterized.levDis(between: transcribedTextParameterized))
         let damerauLevenshteinDistance: Double = Double(textToReadParameterized.distanceDamerauLevenshtein(between: transcribedTextParameterized))
         let jaroWinklerDistance: Double = textToReadParameterized.distanceJaroWinkler(between: transcribedTextParameterized)
         
         levenshtein = (1 - (levenshteinDistance/biggestString)) * 100
         damerauLevenshtein = (1 - damerauLevenshteinDistance/biggestString) * 100
-        jaroWinkler = textToReadParameterized.distanceJaroWinkler(between: transcribedTextParameterized) * 100
+        jaroWinkler = jaroWinklerDistance * 100
     }
     
     func removePontuaction() {
+        
         textToReadParameterized = textToRead.lowercased()
             .replacingOccurrences(of: ",", with: "").replacingOccurrences(of: "'", with: "").replacingOccurrences(of: "...", with: "").replacingOccurrences(of: "!", with: "").replacingOccurrences(of: "?", with: "").replacingOccurrences(of: ";", with: "").replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "—", with: "")
         transcribedTextParameterized = transcribedText.lowercased()
@@ -167,19 +199,20 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     func returnTheBiggestString() {
         biggestString = calculateBiggestString(s1: textToReadParameterized, s2: transcribedTextParameterized)
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let resultViewController = segue.destination as? ResultViewController {
-            resultViewController.levenshtein = levenshtein
-            resultViewController.damerauLevenshtein = damerauLevenshtein
-            resultViewController.jaroWinkler = jaroWinkler
-        }
-    }
+//
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if let resultViewController = segue.destination as? ResultViewController {
+//            resultViewController.levenshtein = levenshtein
+//            resultViewController.damerauLevenshtein = damerauLevenshtein
+//            resultViewController.jaroWinkler = jaroWinkler
+//            resultViewController.locale = locale
+//        }
+//    }
     
     @IBAction func refreshText(_ sender: UIBarButtonItem) {
+        
         textToRead = texts[Int.random(in: 0..<texts.count)]
         textToReadTextView.text = textToRead
     }
-    
     
 }

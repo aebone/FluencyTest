@@ -15,6 +15,7 @@
 		5B58A5C5214FFD3700173657 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B58A5C3214FFD3700173657 /* LaunchScreen.storyboard */; };
 		5B58A5CD215010F800173657 /* StringMetric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B58A5CC215010F800173657 /* StringMetric.swift */; };
 		5B58A5CF2150113B00173657 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B58A5CE2150113B00173657 /* StringExtension.swift */; };
+		5B7BDBE121791B130045DABD /* LocaleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7BDBE021791B130045DABD /* LocaleViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		5B58A5C6214FFD3700173657 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5B58A5CC215010F800173657 /* StringMetric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringMetric.swift; sourceTree = "<group>"; };
 		5B58A5CE2150113B00173657 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		5B7BDBE021791B130045DABD /* LocaleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocaleViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				5B58A5CC215010F800173657 /* StringMetric.swift */,
 				5B58A5CE2150113B00173657 /* StringExtension.swift */,
 				5B0245E52151401800D1B783 /* ResultViewController.swift */,
+				5B7BDBE021791B130045DABD /* LocaleViewController.swift */,
 			);
 			path = FluencyTest;
 			sourceTree = "<group>";
@@ -146,6 +149,7 @@
 			files = (
 				5B0245E62151401800D1B783 /* ResultViewController.swift in Sources */,
 				5B58A5BD214FFD3300173657 /* ViewController.swift in Sources */,
+				5B7BDBE121791B130045DABD /* LocaleViewController.swift in Sources */,
 				5B58A5CD215010F800173657 /* StringMetric.swift in Sources */,
 				5B58A5CF2150113B00173657 /* StringExtension.swift in Sources */,
 				5B58A5BB214FFD3300173657 /* AppDelegate.swift in Sources */,

@@ -6,6 +6,7 @@ class ResultViewController: UIViewController {
     var damerauLevenshtein: Double!
     var jaroWinkler: Double!
     var average: Double!
+    var locale: String!
     
     @IBOutlet weak var levenshteinLabel: UILabel!
     @IBOutlet weak var damerauLevenshteinLabel: UILabel!
@@ -57,4 +58,9 @@ class ResultViewController: UIViewController {
             self.grade = "F"
         }
     }
-}
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let viewController = segue.destination as? ViewController {
+            viewController.locale = locale
+        }
+    }}
