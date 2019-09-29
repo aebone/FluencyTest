@@ -9,7 +9,7 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     @IBOutlet weak var startTalkingButton: UIButton!
     @IBOutlet weak var locleBtn: UIBarButtonItem!
     @IBOutlet weak var indicator: UIActivityIndicatorView!
-    
+    @IBOutlet weak var checkBtn: UIButton!
 
     var textToRead: String = ""
     var transcribedText: String = ""
@@ -35,12 +35,9 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.indicator.isHidden = true
-        
+        print(  self.checkBtn.isEnabled)
         speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: self.locale))!
         
-        print(speechRecognizer.locale)
-        self.locleBtn.title = self.locale
         
         texts = [
             "Small talk is light conversation. It can be about the weather, food, anything that isn’t too serious. If you’re in the same room as someone, in an elevator together or just standing near each other and you aren’t working, making small talk can open the conversation and form friendships and connections. It also saves you from uncomfortable silences!",
@@ -52,10 +49,7 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         
         textToRead = texts[Int.random(in: 0..<texts.count)]
         
-        transcribedText = "Waiting..."
-        
         textToReadTextView.text = textToRead
-        transcribedTextView.text = transcribedText
     
         SFSpeechRecognizer.requestAuthorization { (status) in
             OperationQueue.main.addOperation {
@@ -76,18 +70,19 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     }
     
     @IBAction func startTalkingButtonClicked(_ sender: Any) {
-        
+                
         if audioEngine.isRunning {
             startTalkingButton.setTitle("Start Recording", for: .normal)
             promptLabel.text = "Tap the button to dictate..."
             
             request?.endAudio()
             audioEngine.stop()
-            
+            checkBtn.isEnabled = true
             
         } else {
             startTalkingButton.setTitle("Stop Recording", for: .normal)
             promptLabel.text = "Go ahead. I'm listening..."
+            checkBtn.isEnabled = false
             
             startDictation()
         }
@@ -156,10 +151,33 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         return Double(s2.count)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.checkBtn.isEnabled = true
+        self.indicator.isHidden = true
+        
+        print(speechRecognizer.locale)
+        self.locleBtn.title = self.locale
+        
+        transcribedText = "Waiting..."
+        transcribedTextView.text = transcribedText
+
+    }
+    
+    
+    
      @IBAction func checkButtonClicked(_ sender: Any) {
+        
+        self.checkBtn.isEnabled = false
 
         self.indicator.isHidden = false
+        
+        print(  self.checkBtn.isEnabled)
+
+        
         self.indicator.startAnimating()
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
             self.removePontuaction()
             self.returnTheBiggestString()

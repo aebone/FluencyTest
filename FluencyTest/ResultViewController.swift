@@ -13,6 +13,7 @@ class ResultViewController: UIViewController {
     @IBOutlet weak var jaroWinklerLabel: UILabel!
     @IBOutlet weak var averageLabel: UILabel!
     @IBOutlet weak var gradeLabel: UILabel!
+    @IBOutlet weak var localeLabel: UILabel!
     
     var grade: String!
     
@@ -27,6 +28,8 @@ class ResultViewController: UIViewController {
         damerauLevenshteinLabel.text = "Damerau Levenshtein: \(String(format: "%.2f", damerauLevenshtein))"
         jaroWinklerLabel.text = "Jaro Winkler: \(String(format: "%.2f", jaroWinkler))"
         averageLabel.text = "Average: \(String(format: "%.2f", average))"
+        
+        localeLabel.text = self.locale
     }
     
     func calculateAverage() {
